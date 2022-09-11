@@ -1,0 +1,140 @@
+---
+title: "DEEP LEARNING ALGORITHMS FOR TIME SERIES ANALYSIS WITH APPLICATIONS"
+author: "Eda Atalay & İpek Korkmaz"
+date: "05.06.2022"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 1. INTRODUCTION	
+
+Nowadays, more and more data are collected every day and it is critical to be able to construct meaning from the data. Forecasting has an important part in a variety of fields as a result of the technology advancement. Making predictions and decisions around the unknown future is a topic that is necessary in our complex world, especially when it comes to economics. 
+
+In this project, feed-forward neural networks and recurrent neural networks, which are a subject of deep learning was thoroughly examined. For a better understanding of deep learning, literature research has been done and the history of deep learning was discussed. In the project, especially the mathematical relationships and the related equations were presented. Also, a special type of recurrent neural network for time series, LSTM was explored in depth.
+
+In application, the data set containing 44 county pairs, export values for each country pair, and several factors that may affect export values, was examined. The dataset and the meaning of those factors were thoroughly discussed.
+
+The main purpose of the project is to investigate export values change over time and to predict the future. For that reason, several models have been built on Python. Three models have been built using LSTM and the other three models have been built with feed-forward neural network. 
+In order to determine the optimal model for data set, model error values have been compared and regarding this comparison, the discussion has been made.  
+
+### 2. AN OVERVIEW OF DEEP LEARNING
+
+The history of deep learning goes back to McCulloch & Pitts paper published in 1943. According to the study, what makes a human brain a computational device is the neural activity in the mind. Taking this into consideration, deep learning algorithms have been influenced by human brains, which can understand complicated information.
+
+If a network has enough number of neurons and has a proper synaptic connection, then it can compute any value. In this case, a simple logic function will be applied depending on the weights in the McCulloch & Pitts neuron. Furthermore, the concept of threshold is an important feature. For a precise neuron, if the net input which is the weighted sum of the inputs is greater than a certain threshold then the neuron will be fired.
+
+In 1949, Hebb published a book called “The Organization of Behavior”. Hebb suggested that the brain's connectivity is constantly changing as an organism while learning different functional tasks. The idea behind Hebb's theory is that if two neurons are found to be active at the same time, fired together, the strength of the connection between them should be increased. The strength of the connection between neurons will be changed while learning.
+
+Tasks such as learning to classify labeled examples and recognition of distinct patterns were performed by the term called perceptron. Perceptron is the method for iterative weight arrangement, therefore the weights on the connection paths can be improved. Rosenblatt proved a theorem that the learning algorithm can find the right answer if there was a sufficient set of parameters for classifying and there were adequate number of examples. However, in the 1950s the perceptron learning algorithm was needed for digital computers to compute with real numbers which were carried out insufficiently at that time.
+
+Deep learning networks allow communication between computers and human beings while being a bridge between digital and daily life. In other words, it provides a balance between real word which is complex and indefinite with a word with symbols and rules.  
+
+### 3. NEURAL NETWORKS  
+In this section, we closely followed the book titled “An Introduction to Statistical Learning with Application in R” by Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani.  
+
+#### 3.1. Single Layer Neural Networks  
+For predicting the response Y, a neural network will build nonlinear function $\small \vec{X} \to Y$ where $\small X$ is input vector of $\small n$ number of variables $\small \vec{X} =(X_1,X_2,...,Xn)$. These input units will affect the model’s result.  
+
+<center>![_Figure 1: Neural network with single layer_](images/picture1.jpg)</center>  
+
+_Figure 1_ shows feed-forward neural network with single layer. The input vector $\small \vec{X}$ will create input layer neurons in the neural network. Each unit from the input layer will feed the hidden layer network which has K hidden units. In this layer, the units are neither inputs nor outputs, that is why it is called hidden.  
+$$f(X)=β_0+\sum_{k=1}^Kβ_k h_k (X) $$  
+$$=β_0+\sum_{k=1}^Kβ_k g(w_0k+\sum_{i=1}^nw_{ik} X_i).$$
+In Equations above, $\small w_{11},…,w_{nK}$ indicate weights flow through input layer to hidden layer. Similarly, $\small β_1,β_2,…,β_K$ indicate weights flow through hidden layer to output. $\small β_0$ and $\small w_{0k}$ are the bias terms. First index of $\small w$ shows that which neuron in the input layer will feed into the hidden layer. Second index of $\small w$ shows which neuron in the hidden layer feeded up.
+
+$\smallβ$  and $\small w$ parameters must be estimated from data. 
+
+##### 3.1.1. Activation Function 
+
+Nonlinearity is included to a neuron through activation function that is crucial for finding a solution of complex neural network problems. If nonlinearity in the activation function is not applied, network model turns into a simple linear regression model. Also, the nonlinearity of the activation function provides better reflection of complex data.
+
+$\small A_k$ are the neurons in the hidden layer. $\small h_k (X)$ is the function that builds $\small A_k$ with input features. $\small g(t)$ is an activation function that is nonlinear in advance:  
+$$A_k= h_k(X)=g(w_{0k}+\sum_{i=1}^nw_{ik} X_i).$$
+$\small f(X)$  function will be computed with weights $\small β_k$ and the activations $\small A_k$ from hidden layer pass into the output layer: 
+
+$$f(X)= β_0+\sum_{k=1}^Kβ_k A_{k}. $$  
+
+##### 3.1.2. Squared-Error Loss
+
+Squared error function is commonly used to estimate efficiency of the neural network model. It is used to compare the predicted value with the actual value where $\small f(x_i)$ is the prediction and $\small y_i$ is the $\small i^{th}$ observation. The unknown parameters such as biases and weights are determined to minimize
+
+$$\sum_{i=1}^n(y_i-f(x_i ))^2,$$  
+while fitting the model.  
+
+#### 3.2. Multilayer Neural Networks
+
+A large size single hidden layer is theoretically sufficient to make an acceptable approximation. Nevertheless, more than one hidden layer with small size returns good results much more easily.  
+<center>![_Figure 2: Neural network with two hidden layers, p number of outputs and weight matrices $\small W_1$ ,$\small W_2$,B_.](images/picture2.jpg)</center>  
+
+Apart from the number of layers, the difference between _Figure 1_ and _Figure 2_ is the number of results. In single layer neural network there were one output, however in this example, in two hidden layer neural network there are p number of outputs. Nevertheless, it is not necessary to have multiple outputs.
+
+Similarly to single layer neural network, the activation function applied from input layer to first hidden layer:
+
+$$A_k^{(1)}  = h_k^{(1)}(X) = g(w_{0k}^{(1)}+\sum_{i=1}^nw_{ik}^{(1)} X_i), $$  
+for $\small k=1,2,…,K_1.$  
+
+First hidden layer activations $\small A_k^{(1)}$ will be treated as inputs for the second hidden layer activations:   
+$$A_l^{(2)}  = h_l^{(2)}(X) = g(w_{0l}^{(2)}+\sum_{k=1}^{K_1}w_{kl}^{(2)} A_k^{(1)})$$  
+for $\small l=1,2,…,K_2.$  
+
+Each of the activation functions, are function of $\small \vec{X}$ input vector. After sequences of transformations, the network will generate complex $\small \vec{X}$ transformations which are fed as features into the output layer.  
+
+At the output layer there are p number of results. The function is 
+$$f_m (X)=β_{0m}+\sum_{l=1}^{K_2}β_{lm}h_l^{(2)}(X)=β_{0m}+\sum_{l=1}^{K_2}β_{lm}A_l^{(2)},$$
+while $\small m=1,2,…,p$ if all these results are different.  
+
+### 4. RECURRENT NEURAL NETWORKS
+
+While working with documents, such as reviews and articles, or time-series data; remembering previous words or values might be necessary. In such cases, it is important to not start from scratch each time. Therefore, understanding previous data points is crucial. Recurrent neural networks (RNNs) allow information to carry on using loops. The feed-forward neural networks are meant for independent data points, and they are not capable of holding previous information. 
+<center>![_Figure 3: Schematic of a simple recurrent neural network._](images/picture3.jpg)</center>
+
+In _Figure 3_, $\small \{X_l\}_1^L$ are the sequence of input vectors and $\small Y$ is the target which is a single response. The recurrent neural network will sequentially go through input sequence $\small X$. Each input $\small X_l$ will feed into the hidden layer such as a feed-forward neural network. The difference between feed-forward and recurrent neural networks is the hidden layer $\small A_l$ will also take the activation function $\small A_{l-1}$  from the previous step as input. **W,U** and **B** weights used when each of the elements was processed. At each step, $\small O_l$ will be created from each activation function $\small A_l$. The $\small O_L$ is the most relevant one since the target single response will be the result of the last step $\small O_L$.  
+
+$\small X_l$ has $\small p$ units and hidden layer has $\small K$ units:  
+$$X_l^T  = (X_{l1},X_{l2},...,X_{lp}),$$  
+$$A_l^T= (A_{l1},A_{l2},...,A_{lK}).$$  
+Then the main equation for each activation function will follow 
+
+$$A_{lk}  = g (w_{k0}+\sum_{j=1}^pw_{kj}X_{lj}+\sum_{s=1}^Ku_{ks} A_{l-1,s}),$$  
+and the $\small O_l$ output for each layer will be calculated as  
+$$O_l  = β_0+\sum_{k=1}^Kβ_kA_{lk}.$$  
+
+#### 4.1. Disadvantages of Recurrent Neural Networks
+
+Each weight in the network is updated using stochastic gradient descent. By taking the first prediction error of the model, it estimates a gradient. This gradient updates the weights so that less error is made next time, and it goes through the network from the output layer to the input layer. This process is called backward propagation.
+
+In most cases, it is desirable to work with many layers in a neural network since it presents better learning from large training datasets and increases on capacity of the network. However, when propagated backward through the network the gradient vanishes since there are many layers. When a gradient value becomes extremely small, it no longer contributes to learning.
+
+The equation of gradient descent algorithm will follow  
+$$w^+=w- α\frac{∂Error}{∂w},$$  
+where $\small w^+$ is updated weight, $\small w$ is weight, $\small α$ is learning rate, $\small \frac{∂Error}{∂w}$  is the gradient.  
+
+In recurrent neural networks (RNNs), because of the small gradient, earlier layers of the network will stop learning. In this case, the first layers of the network will not learn and RNN will forget what the first inputs are, which are expressed as short-term memory. Therefore, using RNN might not be desirable.  
+
+### 5. LONG SHORT-TERM MEMORY
+
+In this section, we closely followed the blog titled “Understanding LSTM Networks” by Christopher Olah. Additionally, all figures in this chapter are taken from the blog.
+
+Long Short-Term Memory (LSTM), which is a type of recurrent neural network, is broadly similar to the logic gates of a computer. LSTM can prevent long-term dependency problems with the concept of “memory cell”. In the RNN structure, there is only one activation function as seen in _Figure 4_. 
+<center>![_Figure 4: RNN cell structure_](images/picture4.jpg)</center>
+
+However, the LSTM structure is more complex than RNNs as in _Figure 5_. An LSTM cell includes three gates called input gate, forget gate, output gate, and one cell state. Additionally, there are two activation function such as tanh and sigmoid.  
+<center>![_Figure 5: LSTM cell structure_](images/picture5.jpg)</center>
+
+The sigmoid function scales values between 0 and 1,
+$$σ(x)=  \frac{e^x}{(1+ e^x)}=  \frac{1}{(1+ e^{-x})}.$$  
+The tanh function scales values between -1 and 1,
+$$tanh(x) = \frac{e^x-e^{-x}}{e^x+ e^{-x}}.$$  
+#### 5.1. Cell State
+
+The key part of the LSTM is the horizontal line flowing through the cell which is called cell state as seen in _Figure 6_. The flowing information can be removed, or new information can be added to the cell state by the term called gates. The gates will have outputs, and the cell state will be updated according to these outputs by the flow ability.
+
+<center>![_Figure 6: The cell state_](images/picture6.jpg)</center>
+
+
+
+
