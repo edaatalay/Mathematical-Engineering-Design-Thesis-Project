@@ -128,13 +128,41 @@ However, the LSTM structure is more complex than RNNs as in _Figure 5_. An LSTM 
 The sigmoid function scales values between 0 and 1,
 $$σ(x)=  \frac{e^x}{(1+ e^x)}=  \frac{1}{(1+ e^{-x})}.$$  
 The tanh function scales values between -1 and 1,
-$$tanh(x) = \frac{e^x-e^{-x}}{e^x+ e^{-x}}.$$  
+$$tanh(x) = \frac{e^x-e^{-x}}{e^x+ e^{-x}}.$$    
+
 #### 5.1. Cell State
 
 The key part of the LSTM is the horizontal line flowing through the cell which is called cell state as seen in _Figure 6_. The flowing information can be removed, or new information can be added to the cell state by the term called gates. The gates will have outputs, and the cell state will be updated according to these outputs by the flow ability.
 
 <center>![_Figure 6: The cell state_](images/picture6.jpg)</center>
 
+<center><p>$\small C_{t-1}:$ previous cell state, $\small C_t:$ current cell state </p> </center>  
+$\small C_{t-1}$ is the cell state that coming from the previous cell. This  $\small C_{t-1}$  will updated through current cell and will give the new cell state $\small C_t$.
 
+#### 5.2. Gates
 
+LSTM has three gates to decide which information will flow through and which unnecessary information will be removed. In this way, gates will control the cell state. 
+  
+##### 5.2.1. Forget Gates
 
+In the first step of LSTM, forget gate decides which information should be removed from the cell state. To achieve this, the sigmoid function is used which converts values between 0 and 1 for each number in the cell state $\small C_{t-1}$. The output value is calculated from the previous hidden state value $\small h_{t-1}$ and new input value $\small x_t$. Output 0 implies that it should be definitely removed from the cell state and output 1 implies it should be definitely kept in the cell state.  
+<center>![_Figure 7: The forget gate_](images/picture7.jpg)</center>  
+<center>$\small h_{t-1}:$previous hidden state, $\small x_t:$new input, $\small σ:$sigmoid function, $\small f_t:$forget gate output </center><br>
+  
+The forget gate output will be computed with  
+  
+$$f_t= σ(W_f∙(h_{t-1}+x_t) + b_f ),$$
+where $\small W_f$ is weight and $\small b_f$ is bias of forget gate. Later, $\small f_t$ will be used to determine current cell state $\small C_t$.  
+
+##### 5.2.2. Input Gates
+
+The input gate decides which new information will be added to the cell state. In the input gate, there are two layers, sigmoid and tanh functions. tanh layer will create new candidate values $\small \tilde{C_t}$  that have the potential to be added to the cell state while converting values between -1 and 1. Furthermore, similar to the case in forget gate, the input gate will choose what information is going to be stored with the help of the sigmoid function while converting values between 0 and 1. Therefore, the sigmoid function will decide which information will be added by looking at the candidate values $\small \tilde{C_t}$.  
+<center>![_Figure 8: The input gate_](images/picture8.jpg)</center> <center> 
+$\small h_{t-1}:$previous hidden state, $\small x_t:$ new input, $\small tanh:$tanh⁡function$\small \tilde{C_t}:$candidate, $\small σ:$sigmoid function, $\small i_t:$input gate output  </center><br>
+
+Therefore, based on the information provided above, the input gate output $\small i_t$ and the candidate value $\small \tilde{C_t}$ computed as  
+$$ i_t= σ(W_i∙(h_{t-1}+x_t )+ b_i ),$$
+$$\tilde{C_t} =tanh⁡(W_C∙(h_{t-1} + x_t )+ b_C).$$  
+In the next step, with the outputs of the input and forget gates, the old cell state $\small C_{t-1}$   will be updated into new cell state $\small C_t$ as seen in _Figure 9_. The calculation is done by multiplying the old cell state by the forget output, which means that the ones chosen will be forgotten from the old state. Also, candidate values are multiplied by input gate output values to select from new candidate values to be added to new cell state. When these two multiplication added together, the current cell state equation obtained as  
+$$ C_t=f_t*C_{t-1}+ i_t*\tilde{C_t}$$
+<center>![_Figure 9: Updating the current cell state_](images/picture9.jpg)</center>  
