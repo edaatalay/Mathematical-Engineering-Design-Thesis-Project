@@ -21,4 +21,4 @@ In order to determine the optimal model for data set, model error values have be
 ### Instructions & Explanations
 
 * You can display the project's overview and detailed information about mathematical relationships behind neural networks and LSTM by viewing deployment on GitHub Pages.
-* You can display the model building part, codes and information about datasegt by viewing "application_model_building.ipynb" file.
+* You can display the model building part, codes and information about dataset by viewing "application_model_building.ipynb" file.
