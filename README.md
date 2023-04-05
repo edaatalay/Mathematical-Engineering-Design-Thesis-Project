@@ -8,7 +8,6 @@
 - İpek Korkmaz  
 
 ### Introduction 
-Nowadays, more and more data are collected every day and it is critical to be able to construct meaning from the data. Forecasting has an important part in a variety of fields as a result of the technology advancement. Making predictions and decisions around the unknown future is a topic that is necessary in our complex world, especially when it comes to economics. 
 
 In this project, feed-forward neural networks and recurrent neural networks, which are a subject of deep learning was thoroughly examined. For a better understanding of deep learning, literature research has been done and the history of deep learning was discussed. In the project, especially the mathematical relationships and the related equations were presented. Also, a special type of recurrent neural network for time series, LSTM was explored in depth.
 
